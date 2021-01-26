@@ -17,10 +17,7 @@ module.exports = client => {
     client.getUser = async member => {
         const data = await client.getGuild(member.guild);
         const position = await data.users.map(e => e.id).indexOf(member.id);
-        const players = db.each('SELECT * FROM players', function (err, row) {
-            console.log(row)
-           return row
-        });
+        const players = await db.each('SELECT * FROM players', function (err, row) {});
         console.log(players)
         return players
         //return data.users[position];
