@@ -14,11 +14,20 @@ module.exports = client => {
         if (data) return data;
     }
 
-    client.getUser = async member => {
-        const data = await client.getGuild(member.guild);
-        const position = await data.users.map(e => e.id).indexOf(member.id);
-        const players = await db.each('SELECT * FROM players', function (err, row) {});
-        console.log(players)
+    client.getUser = async () => {
+        //const data = await client.getGuild(member.guild);
+        //const position = await data.users.map(e => e.id).indexOf(member.id);
+        const players = []
+        await db.each('SELECT * FROM players', function (err, row) {
+            players.push(row);
+            const clientPosition = players.map(e => e.ClientID)
+            const guildPosition = players.map(e => e.GuildID)
+            console.log(clientPosition)
+            console.log(guildPosition);
+            console.log('----')
+            console.log(players)
+            return players
+        });
         return players
         //return data.users[position];
     }
@@ -74,5 +83,5 @@ module.exports = client => {
 
     client.createMissingInfoOnUser = (member, missingInfo = {}) => {
         Guild.updateOne({"users.id": member.id}, {$set: missingInfo}).then();
-};
+    };
 }
